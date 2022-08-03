@@ -3,6 +3,8 @@ import ORM from "./ORM";
 
 @ORM.entity({ schema: "branas", table: "author" })
 export default class Author extends Entity {
+	@ORM.pk({ name: "id_author" })
+	idAuthor?: number;
 	@ORM.column({ name: "name" })
 	name: string;
 

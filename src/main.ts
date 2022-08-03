@@ -9,9 +9,10 @@ async function init () {
 	const orm = new ORM(connection);
 	await orm.save(book);
 	const books = await orm.list(Book);
-	console.log(books);
-	const oneBook = await orm.get(Book, 1);
-	console.log(oneBook);
+	// console.log(books);
+	const oneBook = await orm.get(Book, 50);
+	console.log(oneBook.title);
+	console.log(oneBook.author.name);
 	await connection.close();
 }
 init();

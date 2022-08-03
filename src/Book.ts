@@ -8,7 +8,7 @@ export default class Book extends Entity {
 	idBook?: number;
 	@ORM.column({ name: "title" })
 	title: string;
-	@ORM.relationship
+	@ORM.relationship({ entity: Author })
 	author: Author;
 
 	constructor (title: string, author: Author) {

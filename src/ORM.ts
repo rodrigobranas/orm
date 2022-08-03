@@ -50,6 +50,11 @@ export default class ORM {
 		const statement = `select * from ${entity.prototype.schema}.${entity.prototype.table} where ${entity.prototype.pk.column} = $1`;
 		const [data] = await this.connection.query(statement, [id]);
 		const obj = this.build(entity, data);
+		for (const relationship of obj.relationships) {
+			const statement = `select * from ${relationship.entity.prototype.schema}.${relationship.entity.prototype.table} where ${entity.prototype.pk.column} = $1`;
+			const [data] = await this.connection.query(statement, [id]);
+			obj[relationship.property] = this.build(relationship.entity, data);
+		}
 		return obj;
 	}
 
@@ -73,8 +78,10 @@ export default class ORM {
 		}
 	}
 
-	static relationship (target: Entity, propertyKey: string) {
-		target.relationships = target.relationships || [];
-		target.relationships.push({ property: propertyKey });
+	static relationship (config: { entity: Function }) {
+		return (target: Entity, propertyKey: string) => {
+			target.relationships = target.relationships || [];
+			target.relationships.push({ property: propertyKey, entity: config.entity });
+		}
 	}
 }
